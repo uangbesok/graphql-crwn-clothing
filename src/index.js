@@ -3,26 +3,38 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ApolloProvider } from "react-apollo";
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient, gql } from "apollo-boost";
+import { ApolloProvider, gql, ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { resolvers, typeDefs } from "./graphql/resolvers";
 
 import { store, persistor } from "./redux/store";
 
 import "./index.css";
 import App from "./App";
 
-const httpLink = createHttpLink({
+const link = new HttpLink({
   uri: "https://crwn-clothing.com",
 });
 
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-  link: httpLink,
+  link,
   cache,
+  typeDefs,
+  resolvers,
 });
+
+client.writeQuery({
+  query: gql`
+    query {
+      cartHidden
+    }
+  `,
+  data: {
+    cartHidden: true,
+  },
+});
+
 
 ReactDOM.render(
   <ApolloProvider client={client}>
