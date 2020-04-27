@@ -6,7 +6,7 @@ import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
 
 import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg';
 
-import { useMutation, gql } from '@apollo/client';
+import { useMutation, useQuery, gql } from '@apollo/client';
 
 import './cart-icon.styles.scss';
 
@@ -16,9 +16,16 @@ const TOGGLE_CART_HIDDEN = gql`
     }
 `
 
-const CartIcon = ({ itemCount }) => {
+const GET_ITEM_COUNT = gql`
+    {
+        itemCount @client
+    }
+`
+
+const CartIcon = () => {
 
   const [toggleCartHidden] = useMutation(TOGGLE_CART_HIDDEN);
+  const { data: {itemCount} } = useQuery(GET_ITEM_COUNT);
 
   return (
   <div className='cart-icon' onClick={toggleCartHidden}>
@@ -27,12 +34,4 @@ const CartIcon = ({ itemCount }) => {
   </div>)
 };
 
-
-const mapStateToProps = createStructuredSelector({
-  itemCount: selectCartItemsCount
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(CartIcon);
+export default CartIcon;

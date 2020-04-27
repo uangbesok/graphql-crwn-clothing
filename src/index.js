@@ -27,11 +27,15 @@ const client = new ApolloClient({
 client.writeQuery({
   query: gql`
     query {
-      cartHidden
+      cartHidden,
+      cartItems,
+      itemCount,
     }
   `,
   data: {
     cartHidden: true,
+    cartItems: [],
+    itemCount: 0,
   },
 });
 

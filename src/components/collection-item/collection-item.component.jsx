@@ -1,13 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import CustomButton from '../custom-button/custom-button.component';
-import { addItem } from '../../redux/cart/cart.actions';
+import { gql, useMutation } from "@apollo/client";
 
 import './collection-item.styles.scss';
 
-const CollectionItem = ({ item, addItem }) => {
+const ADD_ITEM_TO_CART = gql`
+  mutation AddItemToCart($item: Item!) {
+    addItemToCart(item: $item) @client
+  }
+`;
+
+const CollectionItem = ({ item }) => {
   const { name, price, imageUrl } = item;
+  const [addItemToCart] = useMutation(ADD_ITEM_TO_CART, { variables: { item } });
 
   return (
     <div className='collection-item'>
@@ -21,18 +27,11 @@ const CollectionItem = ({ item, addItem }) => {
         <span className='name'>{name}</span>
         <span className='price'>{price}</span>
       </div>
-      <CustomButton onClick={() => addItem(item)} inverted>
+      <CustomButton onClick={addItemToCart} inverted>
         Add to cart
       </CustomButton>
     </div>
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  addItem: item => dispatch(addItem(item))
-});
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(CollectionItem);
+export default CollectionItem;
