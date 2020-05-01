@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ApolloProvider, gql, ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { resolvers, typeDefs } from "./graphql/resolvers";
+import * as serviceWorker from './serviceWorker';
 
 import { store, persistor } from "./redux/store";
 
@@ -52,3 +53,5 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById("root")
 );
+
+serviceWorker.register();
